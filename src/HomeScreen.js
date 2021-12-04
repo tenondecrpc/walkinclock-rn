@@ -14,8 +14,8 @@ export default function HomeScreen({navigation}) {
     navigation.navigate('Mark');
   };
 
-  const goRegister= async () => {
-    navigation.navigate('Register');
+  const goLogin= async () => {
+    navigation.navigate('Login');
   };
 
   return (
@@ -31,7 +31,7 @@ export default function HomeScreen({navigation}) {
             <Button
               title="Registro"
               color="green"
-              onPress={goRegister}
+              onPress={goLogin}
             />
           </TouchableOpacity>
         <StatusBar style="auto" />

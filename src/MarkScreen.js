@@ -12,10 +12,11 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import * as LocalAuthentication from 'expo-local-authentication';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import fingerprint from '../src/icon/fingerprint.png';
 
-export default function MarkScreen() {
+export default function MarkScreen({navigation}) {
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
   const [name, setName] = useState();
 
@@ -43,7 +44,6 @@ export default function MarkScreen() {
   };
 
   const handleBiometricAuth = async () => {
-    console.log("ENTRA")
     // Check if hardware supports biometrics
     const isBiometricAvailable = await LocalAuthentication.hasHardwareAsync();
 
@@ -84,7 +84,14 @@ export default function MarkScreen() {
     console.log('supportedBiometrics', { supportedBiometrics });
     console.log('savedBiometrics', { savedBiometrics });
     console.log('biometricAuth', { biometricAuth });
+
+    const nameFromStorage = await AsyncStorage.getItem('@name');
+    setName(nameFromStorage);
+    setTimeout(() => {
+      navigation.navigate('Home');
+    }, 2000);
   };
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -95,15 +102,15 @@ export default function MarkScreen() {
             source={fingerprint}
           />
         </TouchableWithoutFeedback>
-          <View style={styles.nameContainer}>
-            <Text style={styles.nameTitle}>Nombre</Text>
-            <TextInput
-              style={styles.nameValue}
-              value={name}
-              placeholder="Nombre validado"
-              editable={false}
-            />
-          </View>
+        <View style={styles.nameContainer}>
+          <Text style={styles.nameTitle}>Nombre</Text>
+          <TextInput
+            style={styles.nameValue}
+            value={name}
+            placeholder="Nombre validado"
+            editable={false}
+          />
+        </View>
         <StatusBar style="auto" />
       </View>
     </SafeAreaView>
