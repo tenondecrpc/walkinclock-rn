@@ -5,23 +5,29 @@ import {
   Text,
   View,
   SafeAreaView,
-  Button,
-  TouchableHighlight,
   Alert,
+  Image,
+  TextInput,
+  TouchableWithoutFeedback,
   StatusBar as RnStatusBar,
 } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
 
+import fingerprint from '../src/icon/fingerprint.png';
+
 export default function MarkScreen() {
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
+  const [name, setName] = useState();
 
   // Check if hardware supports biometrics
   useEffect(() => {
     (async () => {
       const compatible = await LocalAuthentication.hasHardwareAsync();
+      console.log("Is Biometric Supported", compatible);
       setIsBiometricSupported(compatible);
+      handleBiometricAuth();
     })();
-  });
+  }, []);
 
   const fallBackToDefaultAuth = () => {
     console.log('fall back to password authentication');
@@ -37,6 +43,7 @@ export default function MarkScreen() {
   };
 
   const handleBiometricAuth = async () => {
+    console.log("ENTRA")
     // Check if hardware supports biometrics
     const isBiometricAvailable = await LocalAuthentication.hasHardwareAsync();
 
@@ -65,30 +72,38 @@ export default function MarkScreen() {
       );
 
     // Authenticate use with Biometrics (Fingerprint, Facial recognition, Iris recognition)
-
     const biometricAuth = await LocalAuthentication.authenticateAsync({
-      promptMessage: 'Login with Biometrics',
-      cancelLabel: 'Cancel',
+      promptMessage: 'Verificación de huella',
+      cancelLabel: 'Cancelar',
       disableDeviceFallback: true,
     });
     // Log the user in on success
     if (biometricAuth) console.log('success');
 
-    console.log({ isBiometricAvailable });
-    console.log({ supportedBiometrics });
-    console.log({ savedBiometrics });
-    console.log({ biometricAuth });
+    console.log('isBiometricAvailable', { isBiometricAvailable });
+    console.log('supportedBiometrics', { supportedBiometrics });
+    console.log('savedBiometrics', { savedBiometrics });
+    console.log('biometricAuth', { biometricAuth });
   };
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <TouchableHighlight style={styles.markButtonContainer}>
-          <Button
-            title="Aqui ya se marca"
-            color="#fe7005"
-            onPress={handleBiometricAuth}
+        <Text style={styles.title}>Huella Dactilar</Text>
+        <TouchableWithoutFeedback onPress={handleBiometricAuth}>
+          <Image
+            style={styles.image}
+            source={fingerprint}
           />
-        </TouchableHighlight>
+        </TouchableWithoutFeedback>
+          <View style={styles.nameContainer}>
+            <Text style={styles.nameTitle}>Nombre</Text>
+            <TextInput
+              style={styles.nameValue}
+              value={name}
+              placeholder="Nombre validado"
+              editable={false}
+            />
+          </View>
         <StatusBar style="auto" />
       </View>
     </SafeAreaView>
@@ -101,8 +116,37 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 20,
     paddingRight: 20,
+    alignItems: 'center'
   },
-  markButtonContainer: {
-    height: 60,
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: 'black',
+    height: 40
+  },
+  image: {
+    marginTop: 40,
+    width: 128,
+    height: 128
+  },
+  nameContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 50
+  },
+  nameTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black',
+    height: 24,
+    marginRight: 10
+  },
+  nameValue: {
+    width: 200,
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 10,
+    textAlign: 'center'
   }
 });
