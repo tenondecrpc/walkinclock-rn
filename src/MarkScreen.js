@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
@@ -11,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   StatusBar as RnStatusBar,
 } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import * as LocalAuthentication from 'expo-local-authentication';
 
 import fingerprint from '../src/icon/fingerprint.png';
