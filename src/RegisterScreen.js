@@ -9,7 +9,7 @@ import * as LocalAuthentication from 'expo-local-authentication';
 import fingerprint from '../src/icon/fingerprint.png';
 
 export default RegisterScreen = ({navigation}) => {
-  const [name, setName] = useState('Jorge Olmedo');
+  const [name, setName] = useState();
   const [dni, setDni] = useState();
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
 
